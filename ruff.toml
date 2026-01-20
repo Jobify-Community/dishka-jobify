@@ -64,6 +64,7 @@ ignore = [
     "RUF045",
     "RUF029",
     "PLR2004",
+    "ARG001",
 ]
 
 [lint.isort]

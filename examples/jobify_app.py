@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from dishka import FromDishka, Provider, Scope, make_async_container, provide
-from jobify import JobContext, Jobify
+from jobify import INJECT, JobContext, Jobify
 
-from dishka_jobify import inject, setup_dishka, JobifyProvider
+from dishka_jobify import JobifyProvider, inject, setup_dishka
 
 
 class GreetingService:
@@ -42,21 +42,23 @@ provider = MyProvider()
 container = make_async_container(provider, JobifyProvider())
 setup_dishka(container=container, app=app)
 
+
 @app.task
 @inject
 async def my_cron(
-    greeting: FromDishka[GreetingService],
-    counter: FromDishka[CounterService],
+    greeting: FromDishka[GreetingService] = INJECT,
+    counter: FromDishka[CounterService] = INJECT,
 ) -> None:
     count = counter.increment()
     print(f"[cron] {greeting.greet('cron')} count={count}")
+
 
 @app.task
 @inject
 async def my_job(
     name: str,
-    greeting: FromDishka[GreetingService],
-    counter: FromDishka[CounterService],
+    greeting: FromDishka[GreetingService] = INJECT,
+    counter: FromDishka[CounterService] = INJECT,
 ) -> None:
     count = counter.increment()
     now = datetime.now(tz=UTC)
@@ -70,9 +72,7 @@ async def main() -> None:
         job_delay = await my_job.schedule(name="Sara").delay(seconds=5)
 
         job_cron = await my_cron.schedule().cron(
-            cron="* * * * *",
-            job_id="greeting_cron",
-            replace=True
+            cron="* * * * *", job_id="greeting_cron", replace=True
         )
 
         await job_at.wait()
@@ -82,4 +82,3 @@ async def main() -> None:
 
 if __name__ == "__main__":
     asyncio.run(main())
-

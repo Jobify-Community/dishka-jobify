@@ -8,7 +8,7 @@ from jobify import RequestState
 from dishka_jobify._consts import CONTAINER_NAME, REQUEST_STATE_PARAM
 
 
-def _get_request_state_from_args_kwargs(
+def get_request_state_from_args_kwargs(
     args: tuple[Any, ...],
     kwargs: dict[str, Any],
 ) -> RequestState:
@@ -28,7 +28,7 @@ def _get_request_state_from_args_kwargs(
     raise DishkaError(msg)
 
 
-def _get_container_from_request_state(
+def get_container_from_request_state(
     request_state: RequestState,
 ) -> AsyncContainer | Container:
     container: AsyncContainer | Container | None = request_state.get(CONTAINER_NAME)
@@ -46,8 +46,8 @@ def get_async_container_from_args_kwargs(
     args: tuple[Any, ...],
     kwargs: dict[str, Any],
 ) -> AsyncContainer:
-    request_state: RequestState = _get_request_state_from_args_kwargs(args, kwargs)
-    container: AsyncContainer | Container = _get_container_from_request_state(
+    request_state: RequestState = get_request_state_from_args_kwargs(args, kwargs)
+    container: AsyncContainer | Container = get_container_from_request_state(
         request_state
     )
 
@@ -62,8 +62,8 @@ def get_sync_container_from_args_kwargs(
     args: tuple[Any, ...],
     kwargs: dict[str, Any],
 ) -> Container:
-    request_state: RequestState = _get_request_state_from_args_kwargs(args, kwargs)
-    container: Container | AsyncContainer = _get_container_from_request_state(
+    request_state: RequestState = get_request_state_from_args_kwargs(args, kwargs)
+    container: Container | AsyncContainer = get_container_from_request_state(
         request_state
     )
 

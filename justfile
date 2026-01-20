@@ -7,7 +7,7 @@ set shell := ["sh", "-c"]
 
 [doc("All command information")]
 default:
-  @just --list --unsorted --list-heading $'Dishka-flet  commands…\n'
+  @just --list --unsorted --list-heading $'Dishka-jobify  commands…\n'
 
 # Linter
 [doc("Ruff format")]

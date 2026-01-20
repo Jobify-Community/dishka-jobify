@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from dishka import FromDishka, Provider, Scope, make_async_container, provide
-from jobify import INJECT, JobContext, Jobify
+from jobify import JobContext, Jobify
 
 from dishka_jobify import JobifyProvider, inject, setup_dishka
 
@@ -46,8 +46,8 @@ setup_dishka(container=container, app=app)
 @app.task
 @inject
 async def my_cron(
-    greeting: FromDishka[GreetingService] = INJECT,
-    counter: FromDishka[CounterService] = INJECT,
+    greeting: FromDishka[GreetingService],
+    counter: FromDishka[CounterService],
 ) -> None:
     count = counter.increment()
     print(f"[cron] {greeting.greet('cron')} count={count}")
@@ -57,8 +57,8 @@ async def my_cron(
 @inject
 async def my_job(
     name: str,
-    greeting: FromDishka[GreetingService] = INJECT,
-    counter: FromDishka[CounterService] = INJECT,
+    greeting: FromDishka[GreetingService],
+    counter: FromDishka[CounterService],
 ) -> None:
     count = counter.increment()
     now = datetime.now(tz=UTC)

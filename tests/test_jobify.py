@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 import pytest
 from dishka.exception_base import DishkaError
-from jobify import INJECT, Jobify
+from jobify import Jobify
 
 from dishka_jobify import FromDishka, inject
 
@@ -28,10 +28,10 @@ async def test_async_inject_request_scope(
         @app.task
         @inject
         async def handle(
-            app_dep: FromDishka[AppDep] = INJECT,
-            request_dep: FromDishka[RequestDep] = INJECT,
-            job_id: FromDishka[JobIdDep] = INJECT,
-            mock: FromDishka[Mock] = INJECT,
+            app_dep: FromDishka[AppDep],
+            request_dep: FromDishka[RequestDep],
+            job_id: FromDishka[JobIdDep],
+            mock: FromDishka[Mock],
         ) -> None:
             mock(app_dep, request_dep, job_id)
 
@@ -59,10 +59,10 @@ async def test_sync_inject_request_scope(
         @app.task
         @inject
         def handle(
-            app_dep: FromDishka[AppDep] = INJECT,
-            request_dep: FromDishka[RequestDep] = INJECT,
-            job_id: FromDishka[JobIdDep] = INJECT,
-            mock: FromDishka[Mock] = INJECT,
+            app_dep: FromDishka[AppDep],
+            request_dep: FromDishka[RequestDep],
+            job_id: FromDishka[JobIdDep],
+            mock: FromDishka[Mock],
         ) -> None:
             mock(app_dep, request_dep, job_id)
 
@@ -90,10 +90,10 @@ async def test_async_request_scope_per_job(
         @app.task
         @inject
         async def handle(
-            app_dep: FromDishka[AppDep] = INJECT,
-            request_dep: FromDishka[RequestDep] = INJECT,
-            job_id: FromDishka[JobIdDep] = INJECT,
-            mock: FromDishka[Mock] = INJECT,
+            app_dep: FromDishka[AppDep],
+            request_dep: FromDishka[RequestDep],
+            job_id: FromDishka[JobIdDep],
+            mock: FromDishka[Mock],
         ) -> None:
             mock(app_dep, request_dep, job_id)
 
@@ -121,8 +121,8 @@ async def test_app_scope_reuse(
         @app.task
         @inject
         async def handle(
-            app_dep: FromDishka[AppDep] = INJECT,
-            app_mock: FromDishka[AppMock] = INJECT,
+            app_dep: FromDishka[AppDep],
+            app_mock: FromDishka[AppMock],
         ) -> None:
             del app_dep
             app_mocks.append(app_mock)
@@ -144,7 +144,7 @@ async def test_missing_setup_dishka_raises() -> None:
 
     @app.task
     @inject
-    async def handle(request_dep: FromDishka[RequestDep] = INJECT) -> None:
+    async def handle(request_dep: FromDishka[RequestDep]) -> None:
         del request_dep
 
     async with app:
@@ -163,7 +163,7 @@ async def test_async_task_with_sync_container_raises(
 
         @app.task
         @inject
-        async def handle(app_dep: FromDishka[AppDep] = INJECT) -> None:
+        async def handle(app_dep: FromDishka[AppDep]) -> None:
             del app_dep
 
         async with app:
@@ -182,7 +182,7 @@ async def test_sync_task_with_async_container_raises(
 
         @app.task
         @inject
-        def handle(app_dep: FromDishka[AppDep] = INJECT) -> None:
+        def handle(app_dep: FromDishka[AppDep]) -> None:
             del app_dep
 
         async with app:

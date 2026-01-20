@@ -28,16 +28,16 @@ class JobifyProvider(Provider):
 
 
 @overload
-def inject(func: Callable[ParamsP, ReturnT]) -> Callable[ParamsP, ReturnT]: ...
+def inject(func: Callable[ParamsP, ReturnT]) -> Callable[..., ReturnT]: ...
 
 
 @overload
 def inject(
     func: Callable[ParamsP, Awaitable[ReturnT]],
-) -> Callable[ParamsP, Awaitable[ReturnT]]: ...
+) -> Callable[..., Awaitable[ReturnT]]: ...
 
 
-def inject(func: Callable[ParamsP, Any]) -> Callable[ParamsP, Any]:
+def inject(func: Callable[ParamsP, Any]) -> Callable[..., Any]:
     if inspect.iscoroutinefunction(func):
         return inject_async(func)
     return inject_sync(func)

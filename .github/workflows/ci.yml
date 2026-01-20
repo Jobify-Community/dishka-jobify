@@ -4,7 +4,17 @@ on:
   push:
     branches:
       - main
+      - master
+      - develop
   pull_request:
+    types:
+      - opened
+      - synchronize
+      - ready_for_review
+    branches:
+      - main
+      - develop
+      - master
 
 permissions:
   actions: read

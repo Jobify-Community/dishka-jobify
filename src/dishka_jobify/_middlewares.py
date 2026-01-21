@@ -25,16 +25,10 @@ class DishkaSyncMiddleware(BaseMiddleware):
 
     @override
     async def __call__(self, call_next: CallNext, context: JobContext) -> Any:
-        if CONTAINER_NAME in context.request_state:
-            return await call_next(context)
-
         context_data = _build_context_data(context)
         with self._container(context=context_data) as request_container:
             context.request_state[CONTAINER_NAME] = request_container
-            try:
-                return await call_next(context)
-            finally:
-                context.request_state.pop(CONTAINER_NAME, None)
+            return await call_next(context)
 
 
 class DishkaAsyncMiddleware(BaseMiddleware):
@@ -44,13 +38,7 @@ class DishkaAsyncMiddleware(BaseMiddleware):
 
     @override
     async def __call__(self, call_next: CallNext, context: JobContext) -> Any:
-        if CONTAINER_NAME in context.request_state:
-            return await call_next(context)
-
         context_data = _build_context_data(context)
         async with self._container(context=context_data) as request_container:
             context.request_state[CONTAINER_NAME] = request_container
-            try:
-                return await call_next(context)
-            finally:
-                context.request_state.pop(CONTAINER_NAME, None)
+            return await call_next(context)

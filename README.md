@@ -43,11 +43,11 @@ from dishka import make_async_container, Provider, provide, Scope
 ```python
 class MyProvider(Provider):
     @provide(scope=Scope.REQUEST)
-    def get_greeting_service(self) -> GreetingService:
-        return GreetingService(name="Dishka User")
+    def greeting_service(self, context: JobContext) -> GreetingService:
+        return GreetingService(job_id=str(context.job.id))
 
     @provide(scope=Scope.APP)
-    def get_counter_service(self) -> CounterService:
+    def counter_service(self) -> CounterService:
         return CounterService()
 ```
 

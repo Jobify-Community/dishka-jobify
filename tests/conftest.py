@@ -1,5 +1,5 @@
 import inspect
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from contextlib import AbstractAsyncContextManager, asynccontextmanager
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -26,7 +26,7 @@ async def _jobify_app(
     provider: AppProvider,
     *,
     use_async_container: bool,
-) -> AsyncIterator[Jobify]:
+) -> AsyncGenerator[Jobify, None]:
     app = Jobify(tz=UTC, storage=False)
 
     container: AsyncContainer | Container
